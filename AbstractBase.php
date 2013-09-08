@@ -30,6 +30,9 @@ abstract class AbstractBase {
 	protected function getMap() {
 		return $this->map;
 	}
+	protected function addToMap($character) {
+		$this->map[] = $character;
+	}
 
 	protected function getChar($encode) {
 		$map = $this->getEncodeMap();
@@ -39,6 +42,10 @@ abstract class AbstractBase {
 		$map = $this->getCharacterMap();
 		$i = rand(0, $this->getInstances()-1);
 		return $map[$char][$i];
+	}
+
+	protected function save() {
+		file_put_contents($this->getMapFile(), json_encode($this->getMap()));
 	}
 
 	protected function getCharacterMap($reload = false) {
@@ -52,7 +59,6 @@ abstract class AbstractBase {
 		}
 		return $this->characterMap;
 	}
-
 	protected function getEncodeMap($reload = false) {
 		if (!count($this->encodeMap) || $reload) {
 			foreach ($this->map as $characters) {

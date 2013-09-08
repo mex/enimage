@@ -15,7 +15,7 @@ class Enimage extends AbstractBase {
 		$root = ceil(sqrt($count * 4 / 6));
 		for ($i = 1; $i <= floor(pow($root, 2) / 4 * 6) - $count; $i++) {
 			$offset = array_rand($encodes);
-			array_splice($encodes, $offset, 0, $this->getNull());
+			array_splice($encodes, $offset, 0, array($this->getNull()));
 		}
 		$colors = str_split(implode('', $encodes), 6);
 		$this->generateImage($outputFile, $colors, $root);
@@ -25,6 +25,9 @@ class Enimage extends AbstractBase {
 		$i = 0;
 		for ($y = 0; $y < $size; $y++) {
 			for ($x = 0; $x < $size; $x++) {
+				if (strlen($colors[$i]) < 6) {
+					$colors[$i] = str_pad($colors[$i], 6, '0', STR_PAD_RIGHT);
+				}
 				imagesetpixel($this->im, $x,$y, $this->getColor($colors[$i]));
 				$i++;
 			}
@@ -60,9 +63,9 @@ class Enimage extends AbstractBase {
 	private function getColorAt($x, $y) {
 		$rgb = imagecolorat($this->im, $x, $y);
 		return
-				str_pad(dechex(($rgb >> 16) & 0xFF), 2, "0", STR_PAD_LEFT) .
-				str_pad(dechex(($rgb >> 8) & 0xFF), 2, "0", STR_PAD_LEFT) .
-				str_pad(dechex($rgb & 0xFF), 2, "0", STR_PAD_LEFT);
+				str_pad(dechex(($rgb >> 16) & 0xFF), 2, '0', STR_PAD_LEFT) .
+				str_pad(dechex(($rgb >> 8) & 0xFF), 2, '0', STR_PAD_LEFT) .
+				str_pad(dechex($rgb & 0xFF), 2, '0', STR_PAD_LEFT);
 	}
 
 }
